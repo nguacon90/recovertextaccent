@@ -3,12 +3,14 @@ var Application = function (options) {
 	this.inputParagraph = options.inputParagraph;
 	this.outputParagraph = options.outputParagraph;
 	this.urlRestService = options.urlRestService;
+	this.percentElm = options.percent;
 	this.elements= {
 		removeAccentBtn : options.removeAccentBtn,
 		recoverAccentBtn: options.recoverAccentBtn
 	};
 	this.isProcessing = false;
 	this.loadingElm = options.loadingElm;
+	this.regex = /[`~!@#$%^&*()_|+\-=?;:'"“,.<>\{\}\[\]\\\/]/gi;
 };
 
 Application.prototype = {
@@ -48,6 +50,8 @@ Application.prototype = {
 				"input": self.inputParagraph.val()
 			}).done(function(data){
 				self.outputParagraph.html(data.model);
+				self.computePercent(data.model);
+				
 				self.isProcessing = false;
 				self.hideLoading();
 			}).fail(function(){
@@ -55,6 +59,26 @@ Application.prototype = {
 				self.hideLoading();
 			});
 		});
+	},
+	
+	computePercent: function(recoveredResult) {
+		var oldText = this.originParagraph.val().replace(this.regex, ' ').replace(/\s{2,}/g, ' ');
+		var olds = oldText.split(" ");
+		var recoveredText = recoveredResult.replace(this.regex, ' ').replace(/\s{2,}/g, ' ');
+		var recovers = recoveredText.split(" ");
+		var countCorrect = 0;
+		for(var i=0; i<olds.length; i++) {
+			console.log(olds[i], recovers[i]);
+			if(olds[i] === recovers[i]) {
+				countCorrect++;
+			}
+		}
+		
+		console.log(countCorrect);
+		console.log(olds.length);
+		console.log(recovers.length);
+		var percent = Math.round(countCorrect/olds.length * 10000) / 100 + '%';
+		this.percentElm.html(percent) ;
 	},
 	
 	showLoading: function() {

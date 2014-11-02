@@ -13,7 +13,8 @@
 			recoverAccentBtn : $("#recoverAccent"),
 			removeAccentBtn : $("#removeAccent"),
 			urlRestService: "rest/service/recoverAccent",
-			loadingElm: $("#loading")
+			loadingElm: $("#loading"),
+			percent: $("#percent")
 		});
 		app.init();
 	});
