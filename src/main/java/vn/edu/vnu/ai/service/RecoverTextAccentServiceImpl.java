@@ -43,40 +43,45 @@ public class RecoverTextAccentServiceImpl implements RecovertextAccentService {
 		List<String> unicodeWords1;
 		List<String> unicodeWords2;
 		List<String> unicodeWords3;
-		int a = 1;
+		int a = 0;
 		int length = words.size();
 		while (a < length) {
-			unicodeWords1 = generateUnicodeService.getAllUnicodeWords(words.get(a - 1));
-			unicodeWords2 = generateUnicodeService.getAllUnicodeWords(words.get(a));
+			unicodeWords1 = generateUnicodeService.getAllUnicodeWords(words.get(a));
 			unicodeWords1 = unigramFilter(unicodeWords1);
-			unicodeWords2 = unigramFilter(unicodeWords2);
-
-			if (unicodeWords1.size() == 0) {
-				result.append(words.get(a - 1)).append(" ");
+			if (unicodeWords1.size() == 0 || a == length - 1) {
+				result.append(words.get(a)).append(" ");
 				a++;
 				continue;
 			}
-
-			if (unicodeWords2.size() == 0) {
-				result.append(recoverUsingUnigram(unicodeWords1)).append(" ");
-
-				result.append(words.get(a)).append(" ");
-				a += 2;
-				continue;
-			}
+			
 			
 			if(a < length - 1) {
-				unicodeWords3 = generateUnicodeService.getAllUnicodeWords(words.get(a + 1));
-				unicodeWords3 = unigramFilter(unicodeWords3);
-				List<String> trigramWords = trigramFilter(unicodeWords1, unicodeWords2, unicodeWords3);
-				if (unicodeWords3.size() == 0 || trigramWords.size() == 0) {
-					result.append(recoverUsingUniAndBigram(unicodeWords1, unicodeWords2)).append(" ");
+				unicodeWords2 = generateUnicodeService.getAllUnicodeWords(words.get(a+1));
+				unicodeWords2 = unigramFilter(unicodeWords2);
+				
+				
+				if (unicodeWords2.size() == 0 || a == length - 2) {
+					result.append(recoverUsingUnigram(unicodeWords1)).append(" ");
+					
+					result.append(words.get(a+1)).append(" ");
 					a += 2;
 					continue;
 				}
-				
-				result.append(recoverTrigram(trigramWords)).append(" ");
-				a += 3;
+
+				if(a < length - 2){
+					unicodeWords3 = generateUnicodeService.getAllUnicodeWords(words.get(a + 2));
+					unicodeWords3 = unigramFilter(unicodeWords3);
+					List<String> trigramWords = trigramFilter(unicodeWords1, unicodeWords2, unicodeWords3);
+					
+					if (unicodeWords3.size() == 0 || trigramWords.size() == 0) {
+						result.append(recoverUsingUniAndBigram(unicodeWords1, unicodeWords2)).append(" ");
+						a += 2;
+						continue;
+					}
+					
+					result.append(recoverTrigram(trigramWords)).append(" ");
+					a += 3;
+				}
 			}
 
 		}
