@@ -191,3 +191,17 @@ textarea {
 	line-height: 23px;
 	padding: 10px;
 }
+
+.success-message {
+	color: blue;
+    font-weight: bold;
+    padding: 15px 200px;
+    text-align: left;
+}
+
+.error-message {
+	color: red;
+    font-weight: bold;
+    padding: 15px 200px;
+    text-align: left;
+}

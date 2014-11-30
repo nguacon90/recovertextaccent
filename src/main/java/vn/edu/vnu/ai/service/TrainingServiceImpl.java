@@ -52,10 +52,21 @@ public class TrainingServiceImpl implements TrainingService {
 			contents.append(sCurrentLine).append(" ");
 		}
 		
+		System.out.println("---corpus--: " + contents.length());
+		trainingData(contents.toString());
+		
 		bufferedReader.close();
-		trainingUnigram(contents.toString());
-		trainingBigram(contents.toString());
-		trainingTrigram(contents.toString());
+		
+	}
+	
+	@Override
+	public void trainingData(String data) {
+		trainingUnigram(data);
+		trainingBigram(data);
+		trainingTrigram(data);
+		System.out.println("---unigram--: " + unigramDic.size());
+		System.out.println("---bigram--: " + bigramDic.size());
+		System.out.println("---trigram--: " + trigramDic.size());
 	}
 	
 	private void trainingUnigram(String line) {
@@ -129,4 +140,5 @@ public class TrainingServiceImpl implements TrainingService {
 	public Map<String, Integer> getTrigram() {
 		return this.trigramDic;
 	}
+	
 }

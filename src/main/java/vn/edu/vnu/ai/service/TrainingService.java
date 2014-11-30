@@ -12,4 +12,6 @@ public interface TrainingService {
 	Map<String, Integer> getTrigram();
 
 	void init() throws IOException;
+	
+	void trainingData(String data);
 }

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.edu.vnu.ai.domain.ResponseModel;
+import vn.edu.vnu.ai.service.NormalizeService;
 import vn.edu.vnu.ai.service.RecovertextAccentService;
 import vn.edu.vnu.ai.service.RemoveAccentService;
+import vn.edu.vnu.ai.service.TrainingService;
 
 @RestController
 @RequestMapping("/service")
@@ -19,6 +21,12 @@ public class RestServiceController {
 	
 	@Autowired
 	private RecovertextAccentService recovertextAccentService;
+	
+	@Autowired
+	private TrainingService trainingService;
+	
+	@Autowired
+	private NormalizeService normalizeService;
 	
 	@RequestMapping(value="removeAccent", method=RequestMethod.POST, headers="Accept=application/json")
 	public ResponseModel<String> removeAccent(@RequestParam("input") String input) {
@@ -32,5 +40,13 @@ public class RestServiceController {
 		ResponseModel<String> result = new ResponseModel<String>();
 		result.setModel(recovertextAccentService.recoverTextAccent(input));
 		return result;
+	}
+	
+	@RequestMapping(value="training", method=RequestMethod.POST, headers="Accept=application/json")
+	public Boolean training(@RequestParam("data") String data) {
+		trainingService.trainingData(data);
+		normalizeService.computBigramPropability();
+		normalizeService.computTrigramPropability();
+		return true;
 	}
 }

@@ -11,6 +11,7 @@ var Application = function (options) {
 	this.isProcessing = false;
 	this.loadingElm = options.loadingElm;
 	this.regex = /[`~!@#$%^&*()_|+\-=?;:'"“,.<>\{\}\[\]\\\/]/gi;
+	this.htmlRegex = /<\/?[^>]+(>|$)/g;
 };
 
 Application.prototype = {
@@ -62,7 +63,7 @@ Application.prototype = {
 	},
 	
 	computePercent: function(recoveredResult) {
-		var oldText = this.originParagraph.val().replace(this.regex, ' ').replace(/\s{2,}/g, ' ');
+		var oldText = this.originParagraph.val().replace(this.regex, ' ').replace(/\s{2,}/g, ' ').replace(/(\r\n|\n|\r)/gm, ' ');
 		var olds = oldText.split(" ");
 		var recoveredText = recoveredResult.replace(this.regex, ' ').replace(/\s{2,}/g, ' ');
 		var recovers = recoveredText.split(" ");
